@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: OpenWrt-R619AC
+name: OpenWrt-R619AC-20200222
 
 on:
   push:
@@ -16,8 +16,8 @@ on:
       - 'Lean_r619ac.config'
   schedule:
     - cron: 0 21 * * *
-#  watch:
-#    types: [started]
+  watch:
+    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -61,6 +61,10 @@ jobs:
 
     - name: Clone source code
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+
+    - name: Clone passwall code    
+      run: cd openwrt/package &&  git clone https://github.com/Lienol/openwrt-package.git                 
+
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
@@ -112,10 +116,18 @@ jobs:
         rm -rf packages
         echo "::set-env name=FIRMWARE::$(pwd)"
         echo "::set-output name=status::success"
+        
+   ######把上面生成的.config文件拷贝到bin/targets/ipq40xx/generic/my.config，从而在下载固件时，一起下载回来。
+    - name: Copy .config  to  ./bin/targets/ipq40xx/generic/my.config
+      run: |
+        cd openwrt
+        cp  .config   ./bin/targets/ipq40xx/generic/my.config        
+        
+        
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@master
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_firmware
+        name: OpenWrt_firmware20200222
         path: ${{ env.FIRMWARE }}
