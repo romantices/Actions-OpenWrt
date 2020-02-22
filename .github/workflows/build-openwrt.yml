@@ -16,8 +16,8 @@ on:
       - 'Lean_r619ac.config'
   schedule:
     - cron: 0 21 * * *
-  watch:
-    types: [started]
+#  watch:
+#    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
