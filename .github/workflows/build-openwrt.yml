@@ -15,7 +15,7 @@ on:
 #    paths:
 #      - 'Lean_r619ac.config'
   schedule:
-    - cron: 0 21 * * *
+    - cron: 0 21 1 1 *
 #  watch:
 #    types: [started]
 
